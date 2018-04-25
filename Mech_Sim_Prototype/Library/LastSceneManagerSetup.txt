@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/Scenes/CH_Mech_Test.unity
+  isLoaded: 1
+  isActive: 1
