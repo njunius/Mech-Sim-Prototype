@@ -223,7 +223,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 120000
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -257,7 +257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cdeef4224d9fb444b13214910a10544, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  torsoTransform: {fileID: 0}
+  torsoTransform: {fileID: 1694142237}
   degreesToMouse: 0
 --- !u!66 &1232292126
 CompositeCollider2D:
