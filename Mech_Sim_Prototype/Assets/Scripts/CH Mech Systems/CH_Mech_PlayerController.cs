@@ -8,6 +8,9 @@ public class CH_Mech_PlayerController : MonoBehaviour {
     private float torsoRotation;
     private Vector3 torsoXYRot;
     private float roundedTorsoRot;
+    // used for rotating to move left and right
+    // only perpendicular when rotating to move left and right
+    private float torsoRotPerpToMove;
 
     //private Vector3 mouseLoc;
     public GameObject legs;
@@ -45,6 +48,7 @@ public class CH_Mech_PlayerController : MonoBehaviour {
         legsRigidBody = legs.GetComponent<Rigidbody2D>();
         legsRotation = legsRigidBody.rotation;
 
+        torsoRotPerpToMove = torsoRotation + 90f;
         torsoXYRot = Vector3.zero;
         //mouseLoc = Input.mousePosition;
         torsoRotSpeed = 2.0f;
@@ -60,21 +64,23 @@ public class CH_Mech_PlayerController : MonoBehaviour {
         legsRotation = legsRigidBody.rotation;
         torsoRotation = torsoRigidBody.rotation;
 
+        torsoRotPerpToMove = torsoRotation;
+
         roundedLegsRot = Mathf.Round(legsRotation);
         roundedTorsoRot = Mathf.Round(torsoRotation);
 
         angleBetweenTorsoAndLegs = Mathf.Abs(Mathf.DeltaAngle(roundedTorsoRot, roundedLegsRot));
 
-        torsoXYRot = Vector3.zero;
-        Debug.Log("Legs: " + legsRotation);
-        Debug.Log("torso: " + torsoRotation);
-        Debug.Log("Delta Angle: " + Mathf.DeltaAngle(roundedTorsoRot, roundedLegsRot));
+        if(!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D)) {
+            torsoXYRot = Vector3.zero;
+        }
+            
         if (Input.GetKey(KeyCode.W)) { // go forward relative to the direction the torso is facing
             if (angleBetweenTorsoAndLegs == 180 || angleBetweenTorsoAndLegs == 0) {
                 torsoXYRot += torsoTransform.right;
             }
             else {
-                legsController.rotateLegs(torsoTransform.rotation, legsRotSpeed);
+                handleLegRotation(torsoTransform.rotation, torsoTransform.right);
             }
         }
         if (Input.GetKey(KeyCode.S)) { // go backward relative to the direction the torso is facing
@@ -82,7 +88,7 @@ public class CH_Mech_PlayerController : MonoBehaviour {
                 torsoXYRot -= torsoTransform.right;
             }
             else {
-                legsController.rotateLegs(torsoTransform.rotation, legsRotSpeed);
+                handleLegRotation(torsoTransform.rotation, -torsoTransform.right);
             }
         }
         if (Input.GetKey(KeyCode.A)) { // go left relative to the direction the torso is facing
@@ -90,7 +96,8 @@ public class CH_Mech_PlayerController : MonoBehaviour {
                 torsoXYRot += torsoTransform.up;
             }
             else {
-                legsController.rotateLegs(torsoTransform.rotation, legsRotSpeed);
+                torsoRotPerpToMove += 90f;
+                handleLegRotation(Quaternion.Euler(torsoTransform.rotation.eulerAngles.x, torsoTransform.rotation.eulerAngles.y, torsoRotPerpToMove), torsoTransform.up);
             }
         }
         if (Input.GetKey(KeyCode.D)) { // go right relative to the direction the torso is facing
@@ -98,7 +105,8 @@ public class CH_Mech_PlayerController : MonoBehaviour {
                 torsoXYRot -= torsoTransform.up;
             }
             else {
-                legsController.rotateLegs(torsoTransform.rotation, legsRotSpeed);
+                torsoRotPerpToMove -= 90f;
+                handleLegRotation(Quaternion.Euler(torsoTransform.rotation.eulerAngles.x, torsoTransform.rotation.eulerAngles.y, torsoRotPerpToMove), -torsoTransform.up);
             }
         }
         torsoXYRot.Normalize();
@@ -106,20 +114,25 @@ public class CH_Mech_PlayerController : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        // torso rotation code
-        torsoRotationIncrement = rotationFunction.getAngleToRotateTowards(torsoRotSpeed);
-        torsoRigidBody.MoveRotation(torsoRotationIncrement);
-
         // movement code
         torsoRigidBody.velocity = torsoXYRot * maxMoveSpeed;
+
+        // torso rotation code
+        if (torsoXYRot == Vector3.zero) {
+            torsoRotationIncrement = rotationFunction.getAngleToRotateTowards(torsoRotSpeed);
+        }
+        else {
+            torsoRotationIncrement = rotationFunction.getAngleToRotateTowards(legsRotSpeed);
+        }
+        torsoRigidBody.MoveRotation(torsoRotationIncrement);
+
     }
 
-    // finds rotation perpendicular to given rotation in the direction indicated by sign
-    // intersectingAngle must be in degrees between -360 and 360
-    private Quaternion getIntersectingAngle(Quaternion originalAngle, float intersectingAngle) {
-        float angle2D = originalAngle.eulerAngles.z;
-        angle2D += intersectingAngle;
-        return Quaternion.Euler(new Vector3(0, 0, angle2D));
-
+    private void handleLegRotation(Quaternion torsoRotation, Vector3 directionVelocity) {
+        legsController.rotateLegs(torsoRotation, legsRotSpeed);
+        if (torsoXYRot != Vector3.zero) {
+            torsoXYRot += directionVelocity;
+        }
     }
+
 }
