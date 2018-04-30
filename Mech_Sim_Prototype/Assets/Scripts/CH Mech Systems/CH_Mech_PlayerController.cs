@@ -75,7 +75,6 @@ public class CH_Mech_PlayerController : MonoBehaviour {
         angleBetweenTorsoAndLegs = Mathf.Abs(Mathf.DeltaAngle(roundedTorsoRot, roundedLegsRot));
 
         if(!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D)) {
-            //legsXYRot = Vector2.zero;
 
             if (currMoveSpeed > 0) {
                 currMoveSpeed -= accelerationRate * 0.9f * Time.deltaTime;
@@ -92,7 +91,7 @@ public class CH_Mech_PlayerController : MonoBehaviour {
         }
         if (Input.GetKey(KeyCode.S)) { // go backward relative to the direction the legs are facing
             accelerationDirection = -1.0f;
-            handleForward(accelerationDirection);
+            handleReverse(accelerationDirection);
         }
         if (Input.GetKey(KeyCode.A)) { // go left relative to the direction the torso is facing
             accelerationDirection = 1.0f;
@@ -113,8 +112,8 @@ public class CH_Mech_PlayerController : MonoBehaviour {
 
     void FixedUpdate() {
         // movement code
-        Debug.Log("currMoveSpeed: " + currMoveSpeed);
         torsoRigidBody.velocity = legsXYRot * currMoveSpeed;
+
         // torso rotation code
         if (legsXYRot == Vector3.zero) {
             torsoRotationIncrement = rotationFunction.getAngleToRotateTowards(torsoRotSpeed);
@@ -149,31 +148,20 @@ public class CH_Mech_PlayerController : MonoBehaviour {
             legsXYRot += legsTransform.right;
             currMoveSpeed += accelerationRate * legTransformSign * Time.deltaTime;
         }
-        //else if (angleBetweenTorsoAndLegs == 90) {
-        //    currMoveSpeed += accelerationRate * legTransformSign * Time.deltaTime;
-        //}
         else {
-            handleLegRotation(torsoTransform.rotation, legsTransform.right * legTransformSign);
+            handleLegRotation(torsoTransform.rotation, legsTransform.right);
         }
     }
 
     // expects 90 or -90 degrees
     private void handleLeftRight(float torsoRotPerp, float legTransformSign) {
         if (angleBetweenTorsoAndLegs == 90) {
-            /*if (Input.GetKey(KeyCode.S)) {
-                legsXYRot -= legsTransform.right;
-                currMoveSpeed -= accelerationRate;
-            }
-            else {
-                legsXYRot += legsTransform.right;
-                currMoveSpeed += accelerationRate * Time.deltaTime;
-            }*/
-            legsXYRot += legsTransform.right;// * legTransformSign;
+            legsXYRot += legsTransform.right;
             currMoveSpeed += accelerationRate * legTransformSign * Time.deltaTime;
         }
         else {
             torsoRotPerpToMove += torsoRotPerp;
-            handleLegRotation(Quaternion.Euler(torsoTransform.rotation.eulerAngles.x, torsoTransform.rotation.eulerAngles.y, torsoRotPerpToMove), legsTransform.right * legTransformSign);
+            handleLegRotation(Quaternion.Euler(torsoTransform.rotation.eulerAngles.x, torsoTransform.rotation.eulerAngles.y, torsoRotPerpToMove), legsTransform.right);
         }
     }
 
