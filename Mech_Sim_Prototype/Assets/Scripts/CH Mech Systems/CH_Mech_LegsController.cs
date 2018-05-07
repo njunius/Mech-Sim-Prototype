@@ -24,16 +24,16 @@ public class CH_Mech_LegsController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        legsTransform.position = torsoTransform.position;        
+        legsRigidBody.velocity = torsoRigidBody.velocity;
+        if(legsTransform.position != torsoTransform.position) {
+            legsTransform.position = torsoTransform.position;
+        }    
 	}
 
     // rotates legs towards torsoRotation at rate of rotationSpeed
     public void rotateLegs(Quaternion torsoRotation, float rotationSpeed) {
         legsRotation = legsTransform.rotation;
 
-        if(Mathf.Abs(Mathf.DeltaAngle(legsRotation.eulerAngles.z, torsoRotation.eulerAngles.z)) > 90.0f) {
-            //torsoRotation = Quaternion.Euler(torsoRotation.x, torsoRotation.y, torsoRotation.z + 180f);
-        }
         rotationIncrement = Quaternion.RotateTowards(legsRotation, torsoRotation, rotationSpeed).eulerAngles.z;
         legsRigidBody.MoveRotation(rotationIncrement);
     }

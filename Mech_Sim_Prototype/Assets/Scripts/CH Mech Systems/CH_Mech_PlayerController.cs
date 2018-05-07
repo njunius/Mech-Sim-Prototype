@@ -37,6 +37,9 @@ public class CH_Mech_PlayerController : MonoBehaviour {
     private float torsoRotationIncrement;
     private float legsRotationIncrement;
 
+    // for camera toggling
+    public CameraFollowController mainCamera;
+
     // Use this for initialization
     void Start () {
         torsoRigidBody = GetComponent<Rigidbody2D>();
@@ -56,14 +59,14 @@ public class CH_Mech_PlayerController : MonoBehaviour {
         torsoRotSpeed = 2.0f;
         legsRotSpeed = 1.5f;
         maxMoveSpeed = 0.7f;
-        maxRevSpeed = -0.7f;
+        maxRevSpeed = -1 * maxMoveSpeed;
         currMoveSpeed = 0.0f;
-        accelerationRate = 0.35f;
+        accelerationRate = 2 * maxMoveSpeed;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
+        // start movement and rotation input handling code
         legsRotation = legsRigidBody.rotation;
         torsoRotation = torsoRigidBody.rotation;
 
@@ -78,11 +81,12 @@ public class CH_Mech_PlayerController : MonoBehaviour {
 
             if (currMoveSpeed > 0) {
                 currMoveSpeed -= accelerationRate * 0.9f * Time.deltaTime;
+                currMoveSpeed = Mathf.Max(currMoveSpeed, 0f);
             }
             else {
                 currMoveSpeed += accelerationRate * 0.9f * Time.deltaTime;
+                currMoveSpeed = Mathf.Min(currMoveSpeed, 0f);
             }
-            currMoveSpeed = Mathf.Clamp(currMoveSpeed, maxRevSpeed, maxMoveSpeed);
         }
 
         if (Input.GetKey(KeyCode.W)) { // go forward relative to the direction the torso is facing
@@ -108,6 +112,12 @@ public class CH_Mech_PlayerController : MonoBehaviour {
         legsXYRot.Normalize();
 
         currMoveSpeed = Mathf.Clamp(currMoveSpeed, maxRevSpeed, maxMoveSpeed);
+        // end movement and rotation handling code
+
+        // start camera focus change code
+        if (Input.GetKey(KeyCode.Q)) {
+            mainCamera.switchCameraFocus();
+        }
     }
 
     void FixedUpdate() {
