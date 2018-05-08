@@ -20,6 +20,7 @@ public class RotateTowardMouse : MonoBehaviour {
         mouseLoc = Input.mousePosition;
     }
 
+    // rotation speed in degrees
     public float getAngleToRotateTowards(float rotationSpeed) {
         mouseLoc = Input.mousePosition;
         transformRotation = gameObjectTransform.rotation;

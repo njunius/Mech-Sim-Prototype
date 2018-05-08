@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CH_Mech_PlayerController : MonoBehaviour {
+
     private Rigidbody2D torsoRigidBody;
     public Transform torsoTransform;
     private float torsoRotation;
@@ -22,11 +23,13 @@ public class CH_Mech_PlayerController : MonoBehaviour {
     private Vector3 checkBackwards;
     private RotateTowardMouse rotationFunction;
     private float angleBetweenTorsoAndLegs;
+    private float angleBetweenTorsoAndLegsAbs;
 
     // rotation speed in degrees
     private float torsoRotSpeed;
     private float legsRotSpeed;
 
+    // movement book-keeping
     private float maxMoveSpeed;
     private float maxRevSpeed;
     private float currMoveSpeed;
@@ -36,6 +39,13 @@ public class CH_Mech_PlayerController : MonoBehaviour {
     // rotation book-keeping
     private float torsoRotationIncrement;
     private float legsRotationIncrement;
+
+    // arrow key rotation increment in degrees
+    private float torsoRotationArrowKeyIncrement;
+    private float torsoRotationAmount;
+
+    // arrow key crosshair distance
+    private CH_Mech_CrosshairController crosshair;
 
     // for camera toggling
     public CameraFollowController mainCamera;
@@ -62,6 +72,11 @@ public class CH_Mech_PlayerController : MonoBehaviour {
         maxRevSpeed = -1 * maxMoveSpeed;
         currMoveSpeed = 0.0f;
         accelerationRate = 2 * maxMoveSpeed;
+
+        torsoRotationArrowKeyIncrement = 0f;
+        torsoRotationAmount = 0.25f;
+
+        crosshair = GetComponentInChildren<CH_Mech_CrosshairController>();
 	}
 	
 	// Update is called once per frame
@@ -75,7 +90,8 @@ public class CH_Mech_PlayerController : MonoBehaviour {
         roundedLegsRot = Mathf.Round(legsRotation);
         roundedTorsoRot = Mathf.Round(torsoRotation);
 
-        angleBetweenTorsoAndLegs = Mathf.Abs(Mathf.DeltaAngle(roundedTorsoRot, roundedLegsRot));
+        angleBetweenTorsoAndLegs = Mathf.DeltaAngle(roundedTorsoRot, roundedLegsRot);
+        angleBetweenTorsoAndLegsAbs = Mathf.Abs(angleBetweenTorsoAndLegs);
 
         if(!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D)) {
 
@@ -91,22 +107,24 @@ public class CH_Mech_PlayerController : MonoBehaviour {
 
         if (Input.GetKey(KeyCode.W)) { // go forward relative to the direction the torso is facing
             accelerationDirection = 1.0f;
-            handleForward(accelerationDirection);
+            handleForwardReverse(accelerationDirection);
         }
         if (Input.GetKey(KeyCode.S)) { // go backward relative to the direction the legs are facing
             accelerationDirection = -1.0f;
-            handleReverse(accelerationDirection);
+            handleForwardReverse(accelerationDirection);
         }
         if (Input.GetKey(KeyCode.A)) { // go left relative to the direction the torso is facing
             accelerationDirection = 1.0f;
-            if (Input.GetKey(KeyCode.S))
+            if (angleBetweenTorsoAndLegs < 0f) {
                 accelerationDirection = -1.0f;
+            }
             handleLeftRight(90f, accelerationDirection);
         }
         if (Input.GetKey(KeyCode.D)) { // go right relative to the direction the torso is facing
             accelerationDirection = 1.0f;
-            if (Input.GetKey(KeyCode.S))
+            if (angleBetweenTorsoAndLegs > 0f) {
                 accelerationDirection = -1.0f;
+            }
             handleLeftRight(-90f, accelerationDirection);
         }
         legsXYRot.Normalize();
@@ -118,6 +136,25 @@ public class CH_Mech_PlayerController : MonoBehaviour {
         if (Input.GetKey(KeyCode.Q)) {
             mainCamera.switchCameraFocus();
         }
+        // end camera focus change code
+
+        // start arrow keys rotation code
+        if (Input.GetKey(KeyCode.LeftArrow)) {
+            torsoRotationArrowKeyIncrement += torsoRotationAmount;
+        }
+        if (Input.GetKey(KeyCode.RightArrow)) {
+            torsoRotationArrowKeyIncrement -= torsoRotationAmount;
+        }
+        // end arrow keys rotation code
+
+        // start arrow keys crosshair distance code
+        if (Input.GetKey(KeyCode.UpArrow)) {
+            crosshair.updateDistance(1.0f);
+        }
+        if (Input.GetKey(KeyCode.DownArrow)) {
+            crosshair.updateDistance(-1.0f);
+        }
+        // end arrow keys crosshair distance code
     }
 
     void FixedUpdate() {
@@ -125,14 +162,16 @@ public class CH_Mech_PlayerController : MonoBehaviour {
         torsoRigidBody.velocity = legsXYRot * currMoveSpeed;
 
         // torso rotation code
-        if (legsXYRot == Vector3.zero) {
+        /*if (legsXYRot == Vector3.zero) {
             torsoRotationIncrement = rotationFunction.getAngleToRotateTowards(torsoRotSpeed);
         }
         else {
             torsoRotationIncrement = rotationFunction.getAngleToRotateTowards(legsRotSpeed);
         }
         torsoRigidBody.MoveRotation(torsoRotationIncrement);
-
+        */
+        torsoRigidBody.MoveRotation(torsoRigidBody.rotation + torsoRotationArrowKeyIncrement);
+        torsoRotationArrowKeyIncrement = 0f;
     }
 
     private void handleLegRotation(Quaternion torsoRotation, Vector3 directionVelocity) {
@@ -143,18 +182,8 @@ public class CH_Mech_PlayerController : MonoBehaviour {
     }
 
     // sign value should only be 1 or -1
-    private void handleForward(float legTransformSign) {
-        if (angleBetweenTorsoAndLegs == 180 || angleBetweenTorsoAndLegs == 0) {
-            legsXYRot += legsTransform.right;
-            currMoveSpeed += accelerationRate * legTransformSign * Time.deltaTime;
-        }
-        else {
-            handleLegRotation(torsoTransform.rotation, legsTransform.right * legTransformSign);
-        }
-    }
-
-    private void handleReverse(float legTransformSign) {
-        if (angleBetweenTorsoAndLegs == 180 || angleBetweenTorsoAndLegs == 0 || angleBetweenTorsoAndLegs == 90) {
+    private void handleForwardReverse(float legTransformSign) {
+        if (angleBetweenTorsoAndLegsAbs == 180 || angleBetweenTorsoAndLegsAbs == 0) {
             legsXYRot += legsTransform.right;
             currMoveSpeed += accelerationRate * legTransformSign * Time.deltaTime;
         }
@@ -165,7 +194,7 @@ public class CH_Mech_PlayerController : MonoBehaviour {
 
     // expects 90 or -90 degrees
     private void handleLeftRight(float torsoRotPerp, float legTransformSign) {
-        if (angleBetweenTorsoAndLegs == 90) {
+        if (angleBetweenTorsoAndLegsAbs == 90) {
             legsXYRot += legsTransform.right;
             currMoveSpeed += accelerationRate * legTransformSign * Time.deltaTime;
         }
