@@ -8,8 +8,6 @@ public class WeaponGroupController : MonoBehaviour {
     public GameObject groupDisplay;
     private Image[] groupTracker;
 
-
-
 	// Use this for initialization
 	void Start () {
         groupTracker = new Image[numGroups];
@@ -18,8 +16,12 @@ public class WeaponGroupController : MonoBehaviour {
             GameObject temp = (GameObject)Instantiate(groupDisplay, gameObject.transform.position, gameObject.transform.rotation);
             temp.transform.SetParent(gameObject.transform, false);
             groupTracker[i] = temp.GetComponent<Image>();
+
+            Text tempText = temp.GetComponentInChildren<Text>();
+            tempText.text = "" + (i + 1);
             if(i % 2 != 0) {
                 groupTracker[i].gameObject.transform.Rotate(new Vector3(180, 0, 0));
+                tempText.gameObject.transform.Rotate(new Vector3(180, 0, 0));
             }
         }	
 	}

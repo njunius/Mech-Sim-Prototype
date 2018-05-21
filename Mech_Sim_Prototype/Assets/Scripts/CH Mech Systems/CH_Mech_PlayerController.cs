@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CH_Mech_PlayerController : MonoBehaviour {
 
@@ -49,6 +50,10 @@ public class CH_Mech_PlayerController : MonoBehaviour {
 
     // for camera toggling
     public CameraFollowController mainCamera;
+
+    // for map/HUD switching
+    public Canvas HUD;
+    public Canvas map;
 
     // Use this for initialization
     void Start () {
@@ -155,6 +160,19 @@ public class CH_Mech_PlayerController : MonoBehaviour {
             crosshair.updateDistance(-1.0f);
         }
         // end arrow keys crosshair distance code
+
+        // start map/HUD toggle code
+        if (Input.GetKeyDown(KeyCode.R)) {
+            if (map.enabled) {
+                map.enabled = false;
+                HUD.enabled = true;
+            }
+            else if (HUD.enabled) {
+                map.enabled = true;
+                HUD.enabled = false;
+            }
+        }
+        // end map/HUD toggle code
     }
 
     void FixedUpdate() {
