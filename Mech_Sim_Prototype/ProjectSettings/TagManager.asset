@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CH-Mech
   - Goal
+  - Building
   layers:
   - Default
   - TransparentFX
@@ -16,7 +17,7 @@ TagManager:
   - 
   - 
   - CH-Mech
-  - 
+  - Map
   - 
   - 
   - 

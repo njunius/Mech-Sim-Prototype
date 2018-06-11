@@ -5,40 +5,29 @@ using UnityEngine;
 public class CH_Mech_LegsController : MonoBehaviour {
 
     public Transform torsoTransform;
-    private Rigidbody2D torsoRigidBody;
 
     private Transform legsTransform;
-    private Quaternion legsRotation;
-    private Rigidbody2D legsRigidBody;
-
+    private Quaternion torsoRotationCached;
+    private float rotationSpeedCached;
     private float rotationIncrement;
 
 	// Use this for initialization
 	void Start () {
         legsTransform = GetComponent<Transform>();
-        legsRigidBody = GetComponent<Rigidbody2D>();
-        legsRotation = legsTransform.rotation;
-
-        torsoRigidBody = torsoTransform.gameObject.GetComponent<Rigidbody2D>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        legsRigidBody.velocity = torsoRigidBody.velocity;
-        if(legsTransform.position != torsoTransform.position) {
-            legsTransform.position = torsoTransform.position;
-        }    
 	}
 
-    // rotates legs towards torsoRotation at rate of rotationSpeed
+    void FixedUpdate() {
+        legsTransform.rotation = Quaternion.RotateTowards(legsTransform.rotation, torsoRotationCached, rotationSpeedCached);
+        rotationSpeedCached = 0;
+        torsoRotationCached = legsTransform.rotation;
+
+    }
+
+    // caches passed in direction and speed for rotation towards during the physics update
     public void rotateLegs(Quaternion torsoRotation, float rotationSpeed) {
-        legsRotation = legsTransform.rotation;
+        torsoRotationCached = torsoRotation;
+        rotationSpeedCached = rotationSpeed;
 
-        rotationIncrement = Quaternion.RotateTowards(legsRotation, torsoRotation, rotationSpeed).eulerAngles.z;
-        legsRigidBody.MoveRotation(rotationIncrement);
     }
 
-    public float getRotationIncrement() {
-        return rotationIncrement;
-    }
 }

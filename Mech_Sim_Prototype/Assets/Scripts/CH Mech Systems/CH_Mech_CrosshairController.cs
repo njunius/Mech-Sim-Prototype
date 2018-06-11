@@ -17,7 +17,7 @@ public class CH_Mech_CrosshairController : MonoBehaviour {
         minDistance = 1.0f;
         maxDistance = 10.0f;
         currentDistance = 7.0f;
-        distanceDeltaIncrement = 3.0f;
+        distanceDeltaIncrement = 10.0f;
 	}
 	
 	// Update is called once per frame
