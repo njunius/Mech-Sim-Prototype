@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class QuitOnEscapeKey : MonoBehaviour {
 
@@ -11,7 +12,12 @@ public class QuitOnEscapeKey : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKey(KeyCode.Escape))
+        if (Input.GetKey(KeyCode.Escape)) {
             Application.Quit();
+        }
+
+        if (Input.GetKey(KeyCode.Backspace)) {
+            SceneManager.LoadScene(0);
+        }
 	}
 }

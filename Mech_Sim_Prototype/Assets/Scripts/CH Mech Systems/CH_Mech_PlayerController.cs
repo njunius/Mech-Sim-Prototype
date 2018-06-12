@@ -56,6 +56,8 @@ public class CH_Mech_PlayerController : MonoBehaviour {
     public Canvas HUD;
     public Canvas map;
 
+    public StartupSequenceController start;
+
     // Use this for initialization
     void Start () {
         rigidBody = GetComponent<Rigidbody2D>();
@@ -85,106 +87,111 @@ public class CH_Mech_PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        // start movement and rotation input handling code
-        legsRotation = legsTransform.rotation.eulerAngles.z;
-        torsoRotation = torsoTransform.rotation.eulerAngles.z;
-        torsoRotPerpToMove = torsoTransform.rotation.eulerAngles.z;
+        if (!start.inSequence()) {
+            // start movement and rotation input handling code
+            legsRotation = legsTransform.rotation.eulerAngles.z;
+            torsoRotation = torsoTransform.rotation.eulerAngles.z;
+            torsoRotPerpToMove = torsoTransform.rotation.eulerAngles.z;
 
-        roundedLegsRot = Mathf.Round(legsRotation);
-        roundedTorsoRot = Mathf.Round(torsoRotation);
+            roundedLegsRot = Mathf.Round(legsRotation);
+            roundedTorsoRot = Mathf.Round(torsoRotation);
 
-        angleBetweenTorsoAndLegs = Mathf.DeltaAngle(roundedTorsoRot, roundedLegsRot);
-        angleBetweenTorsoAndLegsAbs = Mathf.Abs(angleBetweenTorsoAndLegs);
+            angleBetweenTorsoAndLegs = Mathf.DeltaAngle(roundedTorsoRot, roundedLegsRot);
+            angleBetweenTorsoAndLegsAbs = Mathf.Abs(angleBetweenTorsoAndLegs);
 
-        // decelerates when movement keys are not  pressed
-        if(!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D)) {
+            // decelerates when movement keys are not  pressed
+            if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D)) {
 
-            if (currMoveSpeed > 0) {
-                currMoveSpeed -= accelerationRate * 0.99f * Time.deltaTime;
-                currMoveSpeed = Mathf.Max(currMoveSpeed, 0f);
+                if (currMoveSpeed > 0) {
+                    currMoveSpeed -= accelerationRate * 0.99f * Time.deltaTime;
+                    currMoveSpeed = Mathf.Max(currMoveSpeed, 0f);
+                }
+                else {
+                    currMoveSpeed += accelerationRate * 0.99f * Time.deltaTime;
+                    currMoveSpeed = Mathf.Min(currMoveSpeed, 0f);
+                }
+            }
+
+            if (Input.GetKey(KeyCode.W)) { // go forward relative to the direction the torso is facing
+                accelerationDirection = 1.0f;
+                handleForwardReverse(accelerationDirection);
+            }
+            if (Input.GetKey(KeyCode.S)) { // go backward relative to the direction the legs are facing
+                accelerationDirection = -1.0f;
+                handleForwardReverse(accelerationDirection);
+            }
+            if (Input.GetKey(KeyCode.A)) { // go left relative to the direction the torso is facing
+                accelerationDirection = 1.0f;
+                if (angleBetweenTorsoAndLegs < 0f || Input.GetKey(KeyCode.S))
+                {
+                    accelerationDirection = -1.0f;
+                }
+                handleLeftRight(torsoPerpAngleAbs, accelerationDirection);
+            }
+            if (Input.GetKey(KeyCode.D)) { // go right relative to the direction the torso is facing
+                accelerationDirection = 1.0f;
+                if (angleBetweenTorsoAndLegs > 0f || Input.GetKey(KeyCode.S))
+                {
+                    accelerationDirection = -1.0f;
+                }
+                handleLeftRight(-torsoPerpAngleAbs, accelerationDirection);
+            }
+            legsXYRot.Normalize();
+            currMoveSpeed = Mathf.Clamp(currMoveSpeed, maxRevSpeed, maxMoveSpeed);
+            // end movement and rotation handling code
+
+            // start camera focus change code
+            if (Input.GetKey(KeyCode.Q)) {
+                mainCamera.switchCameraFocus();
+            }
+            // end camera focus change code
+
+            // start arrow keys rotation code
+            if (Input.GetKey(KeyCode.LeftArrow)) {
+                torsoRotationArrowKeyIncrement += torsoRotationAmount;
+            }
+            if (Input.GetKey(KeyCode.RightArrow)) {
+                torsoRotationArrowKeyIncrement -= torsoRotationAmount;
+            }
+
+            // Due to update loop ordering the legs and torso may be off by as much as 6 degrees
+            // to get the clamping behavior to work, check the range of each of the torso/legs locked angles
+            if (
+                Mathf.Clamp(angleBetweenTorsoAndLegsAbs, torsoForwardAngleAbs, torsoForwardAngleAbs + 5) == angleBetweenTorsoAndLegsAbs ||
+                Mathf.Clamp(angleBetweenTorsoAndLegsAbs, torsoPerpAngleAbs - 3, torsoPerpAngleAbs + 3) == angleBetweenTorsoAndLegsAbs ||
+                Mathf.Clamp(angleBetweenTorsoAndLegsAbs, torsoBackAngleAbs - 3, torsoBackAngleAbs + 3) == angleBetweenTorsoAndLegsAbs
+                ) {
+                torsoRotationArrowKeyIncrement = Mathf.Clamp(torsoRotationArrowKeyIncrement, -legsRotSpeed, legsRotSpeed);
+
             }
             else {
-                currMoveSpeed += accelerationRate * 0.99f * Time.deltaTime;
-                currMoveSpeed = Mathf.Min(currMoveSpeed, 0f);
+                torsoRotationArrowKeyIncrement = Mathf.Clamp(torsoRotationArrowKeyIncrement, -torsoRotationAmount, torsoRotationAmount);
             }
-        }
+            // end arrow keys rotation code
 
-        if (Input.GetKey(KeyCode.W)) { // go forward relative to the direction the torso is facing
-            accelerationDirection = 1.0f;
-            handleForwardReverse(accelerationDirection);
-        }
-        if (Input.GetKey(KeyCode.S)) { // go backward relative to the direction the legs are facing
-            accelerationDirection = -1.0f;
-            handleForwardReverse(accelerationDirection);
-        }
-        if (Input.GetKey(KeyCode.A)) { // go left relative to the direction the torso is facing
-            accelerationDirection = 1.0f;
-            if (angleBetweenTorsoAndLegs < 0f || Input.GetKey(KeyCode.S)) {
-                accelerationDirection = -1.0f;
+            // start arrow keys crosshair distance code
+            if (Input.GetKey(KeyCode.UpArrow)) {
+                crosshair.updateDistance(1.0f);
             }
-            handleLeftRight(torsoPerpAngleAbs, accelerationDirection);
-        }
-        if (Input.GetKey(KeyCode.D)) { // go right relative to the direction the torso is facing
-            accelerationDirection = 1.0f;
-            if (angleBetweenTorsoAndLegs > 0f || Input.GetKey(KeyCode.S)) {
-                accelerationDirection = -1.0f;
+            if (Input.GetKey(KeyCode.DownArrow)) {
+                crosshair.updateDistance(-1.0f);
             }
-            handleLeftRight(-torsoPerpAngleAbs, accelerationDirection);
-        }
-        legsXYRot.Normalize();
-        currMoveSpeed = Mathf.Clamp(currMoveSpeed, maxRevSpeed, maxMoveSpeed);
-        // end movement and rotation handling code
+            // end arrow keys crosshair distance code
 
-        // start camera focus change code
-        if (Input.GetKey(KeyCode.Q)) {
-            mainCamera.switchCameraFocus();
-        }
-        // end camera focus change code
-
-        // start arrow keys rotation code
-        if (Input.GetKey(KeyCode.LeftArrow)) {
-            torsoRotationArrowKeyIncrement += torsoRotationAmount;
-        }
-        if (Input.GetKey(KeyCode.RightArrow)) {
-            torsoRotationArrowKeyIncrement -= torsoRotationAmount;
-        }
-
-        // Due to update loop ordering the legs and torso may be off by as much as 6 degrees
-        // to get the clamping behavior to work, check the range of each of the torso/legs locked angles
-        if(
-            Mathf.Clamp(angleBetweenTorsoAndLegsAbs, torsoForwardAngleAbs, torsoForwardAngleAbs + 5) == angleBetweenTorsoAndLegsAbs || 
-            Mathf.Clamp(angleBetweenTorsoAndLegsAbs, torsoPerpAngleAbs - 3, torsoPerpAngleAbs + 3) == angleBetweenTorsoAndLegsAbs || 
-            Mathf.Clamp(angleBetweenTorsoAndLegsAbs, torsoBackAngleAbs - 3, torsoBackAngleAbs + 3) == angleBetweenTorsoAndLegsAbs
-            ) {
-            torsoRotationArrowKeyIncrement = Mathf.Clamp(torsoRotationArrowKeyIncrement, -legsRotSpeed, legsRotSpeed);
-
-        }
-        else {
-            torsoRotationArrowKeyIncrement = Mathf.Clamp(torsoRotationArrowKeyIncrement, -torsoRotationAmount, torsoRotationAmount);
-        }
-        // end arrow keys rotation code
-
-        // start arrow keys crosshair distance code
-        if (Input.GetKey(KeyCode.UpArrow)) {
-            crosshair.updateDistance(1.0f);
-        }
-        if (Input.GetKey(KeyCode.DownArrow)) {
-            crosshair.updateDistance(-1.0f);
-        }
-        // end arrow keys crosshair distance code
-
-        // start map/HUD toggle code
-        if (Input.GetKeyDown(KeyCode.R)) {
-            if (map.enabled) {
-                map.enabled = false;
-                HUD.enabled = true;
+            // start map/HUD toggle code
+            if (Input.GetKeyDown(KeyCode.R)) {
+                if (map.enabled) {
+                    map.enabled = false;
+                    HUD.enabled = true;
+                }
+                else if (HUD.enabled) {
+                    map.enabled = true;
+                    HUD.enabled = false;
+                }
             }
-            else if (HUD.enabled) {
-                map.enabled = true;
-                HUD.enabled = false;
-            }
+            // end map/HUD toggle code
         }
-        // end map/HUD toggle code
+
     }
 
     void FixedUpdate() {

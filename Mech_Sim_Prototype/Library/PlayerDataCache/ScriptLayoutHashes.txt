@@ -1,6 +1,6 @@
-OSXStandalone
+WindowsStandalone
 PlayerPath?
-A:/Documents/Grad School/Mech Sim Prototype/Builds/Second Critique Builds/MechSim_OSX.app
+A:/Documents/Grad School/Mech Sim Prototype/Builds/EIS Meeting Build/Mech Sim Prototype Windows Build/Mech Sim Prototype Windows Build.exe
 SceneListBegin?
 Assets/Scenes/CH_Mech_Test.unity
 SceneListEnd?
@@ -48,7 +48,7 @@ c63db43c730fa2cbb8ca07de15898cb6 UnityEngine.UI.dll:UnityEngine.UI.Toggle
 f61c0793411f10cf5fbfa1473fef5ef2 UnityEngine.UI.dll:UnityEngine.UI.ToggleGroup
 86d36c43c53541d667100dc90b89cfba UnityEngine.UI.dll:UnityEngine.EventSystems.TouchInputModule
 1b8c02d0aa82fbf036a2b9b2d713eec3 UnityEngine.UI.dll:UnityEngine.UI.VerticalLayoutGroup
-27bb196038e31231fa24172b3ac9fc9f Assembly-CSharp.dll:.CH_Mech_PlayerController
+1100d2bdce98d85dbd9a3536974360da Assembly-CSharp.dll:.CH_Mech_PlayerController
 a35dc9cca2faebc5f5f1aeb9e8e47bbe UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput
 49cd62a578efc0a599b810a2b66cd49c UnityEngine.UI.dll:UnityEngine.UI.Button
@@ -155,3 +155,4 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 01f2e5de37c50583f88b643409876e33 Assembly-CSharp.dll:.CrosshairController
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.CH_Mech_CrosshairController
+8b3eb2e7cd311bd1a2cae0f7637faa56 Assembly-CSharp.dll:.StartupSequenceController
