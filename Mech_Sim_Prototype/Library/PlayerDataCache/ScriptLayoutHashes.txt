@@ -1,6 +1,6 @@
 WindowsStandalone
 PlayerPath?
-A:/Documents/Grad School/Mech Sim Prototype/Builds/EIS Meeting Build/Mech Sim Prototype Windows Build/Mech Sim Prototype Windows Build.exe
+A:/Documents/Grad School/Mech Sim Prototype/Builds/Playable Media Final Build/MechSim Windows Build/MechSim Windows Build.exe
 SceneListBegin?
 Assets/Scenes/CH_Mech_Test.unity
 SceneListEnd?
@@ -119,6 +119,8 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingRenderer
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.QuitOnEscapeKey
 c3168b7c83895a5b62506be1f49c406f Assembly-CSharp.dll:.CH_Mech_LegsController
+5c422af5726a99b4aa162c9c34973bec Assembly-CSharp.dll:.StartupSequenceController
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.EndDemo
 fc1e0f4d8439d9928083474691511a13 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Networking.dll:UnityEngine.Networking.NetworkBehaviour
 60b2bb652410a5867a5ab9a01cd38461 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkDiscovery
@@ -146,13 +148,13 @@ da2d4d4eea066cf33abcfa5be2c9dbdc Assembly-CSharp.dll:.WeaponGroupController
 e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 67a5f2c97205d2e41a8ed7c7ce898f6e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
+da3ca816cb6291b3a334f815dae85ebe Assembly-CSharp.dll:.GoalManagerController
 bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInput
 463516d5b5fe8e67a0a24c48f2095b04 UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInputModule
 c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingCollider
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingRenderer
-4466a651f0cf0cb37430c700f61f1cfe Assembly-CSharp.dll:.GoalController
+c79777cfcf7ae8d1c52a77725fb3583f Assembly-CSharp.dll:.GoalController
 01f2e5de37c50583f88b643409876e33 Assembly-CSharp.dll:.CrosshairController
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.CH_Mech_CrosshairController
-8b3eb2e7cd311bd1a2cae0f7637faa56 Assembly-CSharp.dll:.StartupSequenceController

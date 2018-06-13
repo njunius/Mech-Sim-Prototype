@@ -10,6 +10,9 @@ public class GoalController : MonoBehaviour {
     private CircleCollider2D goalTrigger;
     public GoalManagerController goalManager;
     public EndDemo goalFade;
+    public string thoughtText;
+    public Text dialogueBoxHUD;
+    public Text dialogueBoxMap;
 
 	// Use this for initialization
 	void Start () {
@@ -26,10 +29,12 @@ public class GoalController : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D other) {
         if (other.gameObject.CompareTag("CH-Mech")) {
             if (this.gameObject.CompareTag("Goal-Exit")) {
+                goalText.enabled = true;
                 goalFade.startFade();
             }
             else {
-                goalText.enabled = true;
+                dialogueBoxHUD.text = thoughtText;
+                dialogueBoxMap.text = thoughtText;
             }
         }
     }

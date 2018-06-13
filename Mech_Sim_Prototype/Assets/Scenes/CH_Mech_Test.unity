@@ -2121,17 +2121,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Character1: Saying some things
-
-    Character2: Saying more things
-
-    Character1: Replies
-
-    Character2: Gets mad
-
-    Character1: Tries to calm down Character2
-
-    Character2: Is not having it'
+  m_Text: 
 --- !u!222 &123595520
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4674,7 +4664,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Goal Found
+  m_Text: I'm sorry
 --- !u!222 &445226537
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4754,7 +4744,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 6
   m_TargetDisplay: 0
 --- !u!224 &460408801
 RectTransform:
@@ -8818,6 +8808,12 @@ MonoBehaviour:
   goalMapView: {fileID: 1521419047}
   goalManager: {fileID: 0}
   goalFade: {fileID: 0}
+  thoughtText: "I\u2019m sorry I\u2019m leaving you with this mess but if I stay,
+    things will only get worse. You don\u2019t deserve what I\u2019m doing...no one
+    here does...but you have to fix what I\u2019ve broken. You\u2019re my daughter
+    and I love you. Remember that."
+  dialogueBoxHUD: {fileID: 917496665}
+  dialogueBoxMap: {fileID: 123595519}
 --- !u!1 &910114146
 GameObject:
   m_ObjectHideFlags: 0
@@ -9100,17 +9096,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Character1: Saying some things
-
-    Character2: Saying more things
-
-    Character1: Replies
-
-    Character2: Gets mad
-
-    Character1: Tries to calm down Character2
-
-    Character2: Is not having it'
+  m_Text: 
 --- !u!222 &917496666
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10030,6 +10016,12 @@ MonoBehaviour:
   goalMapView: {fileID: 1071680083}
   goalManager: {fileID: 0}
   goalFade: {fileID: 0}
+  thoughtText: "You\u2019ve done more for everyone here than I can possibly thank
+    you for Wiz. I should have listened to you more...but my ability to do that is
+    long gone. Some parting words: Noria needs more than just computers and machines
+    in her life. The irony of my advice is not lost on me..."
+  dialogueBoxHUD: {fileID: 917496665}
+  dialogueBoxMap: {fileID: 123595519}
 --- !u!58 &1010734055
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -11457,6 +11449,12 @@ MonoBehaviour:
   goalMapView: {fileID: 75940290}
   goalManager: {fileID: 0}
   goalFade: {fileID: 0}
+  thoughtText: "I don\u2019t deserve to be remembered the way you want me to Klaus.
+    I\u2019ve done nothing but harm to this world and you need to come to terms with
+    that. Listen to Eriina. For all her youth she\u2019s wiser than you and maybe
+    even me."
+  dialogueBoxHUD: {fileID: 917496665}
+  dialogueBoxMap: {fileID: 123595519}
 --- !u!58 &1173314059
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -12842,6 +12840,11 @@ MonoBehaviour:
   goalMapView: {fileID: 1040701071}
   goalManager: {fileID: 0}
   goalFade: {fileID: 0}
+  thoughtText: "You two...I can\u2019t say anything to make up for what I\u2019ve
+    forced you to do all these years. Cordie, don\u2019t own my mistakes, they\u2019re
+    mine and mine alone. Hold on to the good that has come from them. Hold on to Iosif."
+  dialogueBoxHUD: {fileID: 917496665}
+  dialogueBoxMap: {fileID: 123595519}
 --- !u!58 &1330174243
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -16631,6 +16634,9 @@ MonoBehaviour:
   goalMapView: {fileID: 1890100446}
   goalManager: {fileID: 0}
   goalFade: {fileID: 24773836}
+  thoughtText: 
+  dialogueBoxHUD: {fileID: 0}
+  dialogueBoxMap: {fileID: 0}
 --- !u!58 &1729746443
 CircleCollider2D:
   m_ObjectHideFlags: 0
