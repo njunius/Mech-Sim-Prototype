@@ -7,6 +7,7 @@ TagManager:
   - CH-Mech
   - Goal
   - Building
+  - Goal-Exit
   layers:
   - Default
   - TransparentFX
